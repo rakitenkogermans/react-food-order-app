@@ -1,38 +1,43 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import cl from './AvailableMeals.module.css';
 import Card from "../UI/Card";
 import MealItem from "./MealItem/MealItem";
 
-const DUMMY_MEALS = [
-    {
-        id: 'm1',
-        name: 'Sushi',
-        description: 'Finest fish and veggies',
-        price: 22.99,
-    },
-    {
-        id: 'm2',
-        name: 'Schnitzel',
-        description: 'A german specialty!',
-        price: 16.5,
-    },
-    {
-        id: 'm3',
-        name: 'Barbecue Burger',
-        description: 'American, raw, meaty',
-        price: 12.99,
-    },
-    {
-        id: 'm4',
-        name: 'Green Bowl',
-        description: 'Healthy...and green...',
-        price: 18.99,
-    },
-];
-
 function AvailableMeals() {
+    const [meals, setMeals] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    useEffect(() => {
+        const fetchMeals = async () => {
+            setIsLoading(true);
+            const response = await fetch('https://react-food-order-c2cff-default-rtdb.firebaseio.com/meals.json');
 
-    const mealsList = DUMMY_MEALS.map((meal) =>
+            if (!response.ok) {
+                throw new Error('Something went wrong.');
+            }
+
+            const respData = await response.json();
+
+            const loadedMeals = [];
+
+            for (const key in respData) {
+                loadedMeals.push({
+                    id: key,
+                    name: respData[key].name,
+                    description: respData[key].description,
+                    price: +respData[key].price,
+                })
+            }
+            setMeals(loadedMeals);
+            setIsLoading(false);
+        };
+        fetchMeals().catch(e => {
+            setIsLoading(false);
+            setError(e.message);
+        });
+    }, []);
+
+    const mealsList = meals.map((meal) =>
         <MealItem
             id={meal.id}
             key={meal.id}
@@ -45,7 +50,9 @@ function AvailableMeals() {
     return (
         <section className={cl.meals}>
             <Card>
-                <ul>{mealsList}</ul>
+                {isLoading && !error && <p style={{textAlign: 'center'}}>Loading...</p>}
+                {!isLoading && error && <p style={{textAlign: 'center'}}>{error}</p>}
+                {!isLoading && !error && <ul>{mealsList}</ul>}
             </Card>
         </section>
     );
