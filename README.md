@@ -1,6 +1,6 @@
 # React Food Order App
 
-This is very simple project which was created while learning ReactJS with online courses. You can add items to cart. Delete items from the cart. Add one more item to the cart by clicking '+' or remove one with '-'. Create pseudo order.
+This is very simple project which was created while learning ReactJS with online courses. You can add items to cart. Delete items from the cart. Add one more item to the cart by clicking '+' or remove one with '-'. Fetch meals items from Firebase and submit order also to Firebase. Lite form validation.
 
 <a href="https://rakitenkogermans.github.io/react-food-order-app/" style="color:#43cea2; font-size: 32px; font-weight: 900;">Link online hosted on github pages 🔗
 </a>
